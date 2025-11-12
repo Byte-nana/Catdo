@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- SEO -->
-    <title>To do List</title>
+    <title>To do App</title>
     <meta name="description" content="Simple to do app" />
     <meta name="authour" content="Byte-nana" />
     <!-- Favicon -->
@@ -29,17 +29,20 @@
     <!-- CSS -->
     <link rel="stylesheet" href="./css/style.css" />
     <!-- Javascript -->
-    <script src="./src/add.js" defer></script>
+    <!-- <script src="./src/add.js" defer></script>
     <script src="./src/storage.js" defer></script>
     <script src="./src/check.js" defer></script>
     <script src="./src/delete.js" defer></script>
-    <script src="./src/filter.js" defer></script>
+    <script src="./src/filter.js" defer></script> -->
   </head>
   <body>
-    <section class="list glass">
-      <header class="header">Your To do</header>
-      <main class="list__main">
-        <ul class="main__filter">
+    <section class="todo glass">
+      <header class="todo__header">
+        <h1 class="header__title">Your To-Do</h1>
+        <button class="header__themeBtn glass">
+          <i class="fa-solid fa-moon"></i>
+        </button>
+        <ul class="header__filters">
           <li class="filter__item item--selected glass">
             <button data-category="all">All</button>
           </li>
@@ -50,14 +53,28 @@
             <button data-category="completed">Completed</button>
           </li>
         </ul>
-        <ul class="main__items glass"></ul>
+      </header>
+      <main class="todo__main">
+        <ul class="main__items glass">
+          <li class="item__row">
+            <input class="item__checkbox" type="checkbox" />
+            <label class="item__name">Hello</label>
+            <button
+              class="item__deleteBtn"
+              type="button"
+              aria-label="button for deleting to-do list"
+            >
+              <i class="fa-solid fa-trash"></i>
+            </button>
+          </li>
+        </ul>
       </main>
       <footer>
         <form class="footer__form" action="#">
           <input id="form__input" type="text" />
           <label class="form__label" for="form__input">Add new task </label>
           <button
-            class="form__btn glass"
+            class="form__addBtn glass"
             type="submit"
             aria-label="button for adding the to do list"
           >
