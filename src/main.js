@@ -13,7 +13,7 @@ const itemContainer = document.querySelector('.main__items');
 
 // pretend LocalStorage data
 const todos = [
-  { id: crypto.randomUUID(), text: 'Finish to-do list', status: 'active' },
+  { id: crypto.randomUUID(), text: 'Finish to-do list', status: 'completed' },
   {
     id: crypto.randomUUID(),
     text: 'Post LinkedIn of to-do list',
@@ -25,6 +25,7 @@ renderTodos(todos);
 // 1. Add
 form.addEventListener('submit', (e) => {
   e.preventDefault();
+
   const text = textInput.value.trim();
 
   if (!text) {
@@ -51,8 +52,13 @@ function createItem(todo) {
   item.setAttribute('class', 'item__row');
 
   item.innerHTML = `
-    <input class="item__checkbox" type="checkbox" />
-    <label class="item__name">${todo.text}</label>
+    <input 
+        type="checkbox" 
+        class="item__checkbox" 
+        id="${todo.id}" 
+        ${todo.status === 'completed' ? 'checked' : ''}
+    />
+    <label class="item__name" for="${todo.id}" >${todo.text}</label>
     <button
         class="item__deleteBtn"
         type="button"
@@ -64,6 +70,16 @@ function createItem(todo) {
 
   return item;
 }
+
+// 2. Check
+itemContainer.addEventListener('change', (e) => {
+  const id = e.target.id;
+  if (!id) return;
+  const checkedItem = document.querySelector(`.item__checkbox[id="${id}"]`);
+
+  const checkedTodo = todos.find((todo) => todo.id === id);
+  checkedTodo.status = checkedItem.checked ? 'completed' : 'active';
+});
 
 // 6. LocalStorage
 // render todos
