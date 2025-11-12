@@ -11,6 +11,7 @@ const form = document.querySelector('.footer__form');
 const textInput = document.querySelector('#form__input');
 const itemContainer = document.querySelector('.main__items');
 const filterBtns = document.querySelector('.header__filters');
+const themeBtn = document.querySelector('.header__themeBtn');
 
 // pretend LocalStorage data
 let todos = [
@@ -110,6 +111,7 @@ filterBtns.addEventListener('click', (e) => {
       : todos.filter((todo) => todo.status === category);
 
   showFilterItems(filteredTodos);
+  //   saveData('status', category);
 });
 
 function showFilterItems(todos) {
@@ -125,6 +127,20 @@ function hideItems(todos) {
     hideItem.style.display = 'none';
   });
 }
+
+// 5. dark mode
+themeBtn.addEventListener('click', (e) => {
+  const icon = themeBtn.querySelector('.fa-solid');
+  if (icon.matches('.fa-moon')) {
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun');
+  } else {
+    icon.classList.remove('fa-sun');
+    icon.classList.add('fa-moon');
+  }
+
+  document.documentElement.classList.toggle('dark');
+});
 
 // 6. LocalStorage
 // render todos
