@@ -222,6 +222,7 @@ ul {
   border: 1px solid var(--accent-color);
   color: var(--accent-color);
 }
+
 /* hover */
 @media (hover: hover) {
   .header__themeBtn:hover,
@@ -240,6 +241,7 @@ ul {
     color: var(--accent-color);
   }
 }
+
 /* bg image */
 @media screen and (min-width: 768px) {
   body {
