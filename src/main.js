@@ -10,6 +10,7 @@
 const form = document.querySelector('.footer__form');
 const textInput = document.querySelector('#form__input');
 const itemContainer = document.querySelector('.main__items');
+const filterBtns = document.querySelector('.header__filters');
 
 // pretend LocalStorage data
 let todos = [
@@ -95,6 +96,36 @@ itemContainer.addEventListener('click', (e) => {
 
   todos = todos.filter((todo) => todo.id !== id);
 });
+
+// 4. filters
+filterBtns.addEventListener('click', (e) => {
+  const category = e.target.dataset.category;
+  if (!category) return;
+
+  hideItems(todos);
+
+  const filteredTodos =
+    category === 'all'
+      ? todos
+      : todos.filter((todo) => todo.status === category);
+
+  showFilterItems(filteredTodos);
+});
+
+function showFilterItems(todos) {
+  todos.forEach((todo) => {
+    const visibleItems = document.querySelector(`li[data-id="${todo.id}"]`);
+    visibleItems.style.display = 'flex';
+  });
+}
+
+function hideItems(todos) {
+  todos.forEach((todo) => {
+    const hideItem = document.querySelector(`li[data-id="${todo.id}"]`);
+    hideItem.style.display = 'none';
+  });
+}
+
 // 6. LocalStorage
 // render todos
 function renderTodos(todos) {
@@ -102,4 +133,8 @@ function renderTodos(todos) {
     const item = createItem(todo);
     itemContainer.appendChild(item);
   });
+}
+// save Data
+function saveData(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
 }
