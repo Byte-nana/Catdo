@@ -12,7 +12,7 @@ const textInput = document.querySelector('#form__input');
 const itemContainer = document.querySelector('.main__items');
 
 // pretend LocalStorage data
-const todos = [
+let todos = [
   { id: crypto.randomUUID(), text: 'Finish to-do list', status: 'completed' },
   {
     id: crypto.randomUUID(),
@@ -50,6 +50,7 @@ form.addEventListener('submit', (e) => {
 function createItem(todo) {
   const item = document.createElement('li');
   item.setAttribute('class', 'item__row');
+  item.setAttribute('data-id', todo.id);
 
   item.innerHTML = `
     <input 
@@ -64,7 +65,7 @@ function createItem(todo) {
         type="button"
         aria-label="button for deleting to-do list"
     >
-        <i class="fa-solid fa-trash"></i>
+        <i class="fa-solid fa-trash" data-id="${todo.id}"></i>
     </button>
   `;
 
@@ -81,6 +82,19 @@ itemContainer.addEventListener('change', (e) => {
   checkedTodo.status = checkedItem.checked ? 'completed' : 'active';
 });
 
+// 3. delete
+itemContainer.addEventListener('click', (e) => {
+  const id = e.target.dataset.id;
+  if (!id) return;
+
+  const deleteBtn = e.target.closest('button');
+  if (!deleteBtn) return;
+
+  const deletedItem = document.querySelector(`li[data-id="${id}"]`);
+  deletedItem.remove();
+
+  todos = todos.filter((todo) => todo.id !== id);
+});
 // 6. LocalStorage
 // render todos
 function renderTodos(todos) {
