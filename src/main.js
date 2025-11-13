@@ -45,6 +45,7 @@ form.addEventListener('submit', (e) => {
 
   const item = createItem(newTodo);
   itemContainer.appendChild(item);
+  item.scrollIntoView({ behavior: 'smooth' });
   textInput.value = '';
   textInput.focus();
 });
@@ -82,6 +83,14 @@ itemContainer.addEventListener('change', (e) => {
 
   const checkedTodo = todos.find((todo) => todo.id === id);
   checkedTodo.status = checkedItem.checked ? 'completed' : 'active';
+
+  // re-render
+  const currentFilter = document.querySelector('.filter__btn.btn--selected')
+    ?.dataset.category;
+  if (currentFilter !== 'all') {
+    hideItems(todos);
+    showFilterItems(todos.filter((todo) => todo.status === currentFilter));
+  }
 });
 
 // 3. delete
@@ -103,6 +112,8 @@ filterBtns.addEventListener('click', (e) => {
   const category = e.target.dataset.category;
   if (!category) return;
 
+  handleActiveBtn(e.target);
+
   hideItems(todos);
 
   const filteredTodos =
@@ -113,7 +124,6 @@ filterBtns.addEventListener('click', (e) => {
   showFilterItems(filteredTodos);
   //   saveData('status', category);
 });
-
 function showFilterItems(todos) {
   todos.forEach((todo) => {
     const visibleItems = document.querySelector(`li[data-id="${todo.id}"]`);
@@ -126,6 +136,12 @@ function hideItems(todos) {
     const hideItem = document.querySelector(`li[data-id="${todo.id}"]`);
     hideItem.style.display = 'none';
   });
+}
+
+function handleActiveBtn(target) {
+  const activeBtn = document.querySelector('.btn--selected');
+  activeBtn.classList.remove('btn--selected');
+  target.classList.add('btn--selected');
 }
 
 // 5. dark mode
