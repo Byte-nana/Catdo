@@ -208,3 +208,7 @@ function defaultBrowserTheme() {
 
   return isDarkMode ? 'dark' : 'light';
 }
+
+textInput.addEventListener('blur', () => {
+  textInput.value = '';
+});

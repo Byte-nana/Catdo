@@ -23,3 +23,20 @@ html.dark body {
 html.dark .glass {
   background: linear-gradient(180deg, hsla(0, 0%, 100%, 0.06), transparent);
 }
+
+html.dark .btn--selected {
+  background-color: var(--color-accent);
+}
+
+html.dark .form__addBtn {
+  color: var(--color-text-variant);
+}
+html.dark .form__addBtn:active {
+  color: var(--color-accent);
+}
+
+@media (hover: hover) {
+  html.dark .form__addBtn:hover {
+    color: var(--color-accent);
+  }
+}
