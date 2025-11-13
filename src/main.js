@@ -139,7 +139,9 @@ themeBtn.addEventListener('click', (e) => {
     icon.classList.add('fa-moon');
   }
 
-  document.documentElement.classList.toggle('dark');
+  const isDark = document.documentElement.classList.toggle('dark');
+
+  //   saveData('theme', isDark ? 'dark' : 'light');
 });
 
 // 6. LocalStorage

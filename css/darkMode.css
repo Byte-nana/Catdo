@@ -1,0 +1,25 @@
+:root.dark {
+  --color-primary-bg: hsl(222 47% 7%);
+  --color-secondary-bg: hsl(215 25% 18% / 40%);
+
+  --color-accent: #7fe9c6;
+  --color-border: rgba(255, 255, 255, 0.15);
+
+  --color-text: hsl(0 0% 100%);
+  --color-text-variant: hsl(215 16% 65%);
+}
+
+html.dark body {
+  color: var(--color-text);
+  background: radial-gradient(
+      1200px 800px at 20% 10%,
+      #0d1623 0%,
+      #0a1220 35%,
+      #0a1120 100%
+    ),
+    var(--color-primary-bg);
+}
+
+html.dark .glass {
+  background: linear-gradient(180deg, hsla(0, 0%, 100%, 0.06), transparent);
+}
