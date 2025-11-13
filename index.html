@@ -4,27 +4,24 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- SEO -->
-    <title>To do App</title>
+    <title>CATDO</title>
     <meta name="description" content="Simple to do app" />
     <meta name="authour" content="Byte-nana" />
     <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/png"
+      href="./image/favicon/favicon-96x96.png"
+      sizes="96x96"
+    />
+    <link rel="icon" type="image/svg+xml" href="./image/favicon/favicon.svg" />
+    <link rel="shortcut icon" href="./image/favicon/favicon.ico" />
     <link
       rel="apple-touch-icon"
       sizes="180x180"
       href="./image/favicon/apple-touch-icon.png"
     />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="32x32"
-      href="./image/favicon/favicon-32x32.png"
-    />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="16x16"
-      href="./image/favicon/favicon-16x16.png"
-    />
+    <meta name="apple-mobile-web-app-title" content="CATDO" />
     <link rel="manifest" href="./image/favicon/site.webmanifest" />
     <!-- OG -->
     <meta property="og:title" content="Your To do App" />
@@ -59,7 +56,14 @@
   <body>
     <section class="todo glass">
       <header class="todo__header">
-        <h1 class="header__title">Your To-Do</h1>
+        <h1 class="header__title">
+          <img
+            class="header__logo"
+            src="./image/logo.png"
+            alt="black cat holding to do list"
+          />
+          <span>CATdo</span>
+        </h1>
         <button class="header__themeBtn glass">
           <i class="fa-solid fa-moon"></i>
         </button>
@@ -91,7 +95,7 @@
             type="submit"
             aria-label="button for adding the to do list"
           >
-            <i class="fa-solid fa-plus"></i>
+            <i class="fa-solid fa-paw"></i>
           </button>
         </form>
       </footer>

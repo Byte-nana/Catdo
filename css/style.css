@@ -59,7 +59,14 @@ ul {
 
 /* header */
 .header__title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   font-size: clamp(2rem, 5vw, 2.8rem);
+}
+
+.header__logo {
+  width: 4rem;
 }
 
 .header__themeBtn {
@@ -87,6 +94,7 @@ ul {
   flex-wrap: wrap;
   gap: 0.8rem;
   padding-left: 0.5rem;
+  margin-top: 0.5rem;
 }
 
 .filter__btn {
