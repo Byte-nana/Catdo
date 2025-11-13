@@ -24,15 +24,7 @@ saveData('theme', theme);
 
 renderTodos(todos);
 renderCategory();
-
-// let todos = [
-//   { id: crypto.randomUUID(), text: 'Finish to-do list', status: 'completed' },
-//   {
-//     id: crypto.randomUUID(),
-//     text: 'Post LinkedIn of to-do list',
-//     status: 'active',
-//   },
-// ];
+renderTheme();
 
 // 1. Add
 form.addEventListener('submit', (e) => {
@@ -117,6 +109,7 @@ itemContainer.addEventListener('click', (e) => {
   deletedItem.remove();
 
   todos = todos.filter((todo) => todo.id !== id);
+  saveData('todos', todos);
 });
 
 // 4. filters
@@ -130,10 +123,10 @@ filterBtns.addEventListener('click', (e) => {
     categoryId === 'all'
       ? todos
       : todos.filter((todo) => todo.status === categoryId);
-  hideItems(todos);
 
+  hideItems(todos);
   showFilterItems(filteredTodos);
-  //   saveData('status', category);
+  saveData('category', categoryId);
 });
 
 function showFilterItems(todos) {
@@ -168,8 +161,7 @@ themeBtn.addEventListener('click', (e) => {
   }
 
   const isDark = document.documentElement.classList.toggle('dark');
-
-  //   saveData('theme', isDark ? 'dark' : 'light');
+  saveData('theme', isDark ? 'dark' : 'light');
 });
 
 // 6. LocalStorage
@@ -191,13 +183,32 @@ function renderTodos(todos) {
   });
 }
 
+// render Category
 function renderCategory() {
   const activeBtn = document.querySelector(
     `.filter__btn[data-category="${category}"]`
   );
   activeBtn.classList.add('btn--selected');
+
+  // showing filtered todos
+
+  const filteredTodos =
+    category === 'all'
+      ? todos
+      : todos.filter((todo) => todo.status === category);
+
+  hideItems(todos);
+  showFilterItems(filteredTodos);
 }
-// updateData
+
+// render Dark mode
+function renderTheme() {
+  if (theme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    return;
+  }
+}
 
 // detect browser theme
 function defaultTheme() {
