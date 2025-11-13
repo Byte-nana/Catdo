@@ -1,10 +1,10 @@
 'use strict';
 
-// 1. Add
-// 2. check
-// 3. delete
-// 4. filters
-// 5. darkMode
+// 1. Add ⭕️
+// 2. check ⭕️
+// 3. delete ⭕️
+// 4. filters ⭕️
+// 5. darkMode ⭕️
 // 6. localStorage
 
 const form = document.querySelector('.footer__form');
@@ -13,16 +13,26 @@ const itemContainer = document.querySelector('.main__items');
 const filterBtns = document.querySelector('.header__filters');
 const themeBtn = document.querySelector('.header__themeBtn');
 
-// pretend LocalStorage data
-let todos = [
-  { id: crypto.randomUUID(), text: 'Finish to-do list', status: 'completed' },
-  {
-    id: crypto.randomUUID(),
-    text: 'Post LinkedIn of to-do list',
-    status: 'active',
-  },
-];
+// Get items from local storage
+let todos = getFromStorage('todos', []);
+let category = getFromStorage('category', 'all');
+let theme = getFromStorage('theme', defaultTheme());
+
+saveData('todos', todos);
+saveData('category', category);
+saveData('theme', theme);
+
 renderTodos(todos);
+renderCategory();
+
+// let todos = [
+//   { id: crypto.randomUUID(), text: 'Finish to-do list', status: 'completed' },
+//   {
+//     id: crypto.randomUUID(),
+//     text: 'Post LinkedIn of to-do list',
+//     status: 'active',
+//   },
+// ];
 
 // 1. Add
 form.addEventListener('submit', (e) => {
@@ -42,6 +52,7 @@ form.addEventListener('submit', (e) => {
     status: 'active',
   };
   todos.push(newTodo);
+  saveData('todos', todos);
 
   const item = createItem(newTodo);
   itemContainer.appendChild(item);
@@ -83,6 +94,7 @@ itemContainer.addEventListener('change', (e) => {
 
   const checkedTodo = todos.find((todo) => todo.id === id);
   checkedTodo.status = checkedItem.checked ? 'completed' : 'active';
+  saveData('todos', todos);
 
   // re-render
   const currentFilter = document.querySelector('.filter__btn.btn--selected')
@@ -109,21 +121,21 @@ itemContainer.addEventListener('click', (e) => {
 
 // 4. filters
 filterBtns.addEventListener('click', (e) => {
-  const category = e.target.dataset.category;
-  if (!category) return;
+  const categoryId = e.target.dataset.category;
+  if (!categoryId) return;
 
   handleActiveBtn(e.target);
 
-  hideItems(todos);
-
   const filteredTodos =
-    category === 'all'
+    categoryId === 'all'
       ? todos
-      : todos.filter((todo) => todo.status === category);
+      : todos.filter((todo) => todo.status === categoryId);
+  hideItems(todos);
 
   showFilterItems(filteredTodos);
   //   saveData('status', category);
 });
+
 function showFilterItems(todos) {
   todos.forEach((todo) => {
     const visibleItems = document.querySelector(`li[data-id="${todo.id}"]`);
@@ -161,6 +173,16 @@ themeBtn.addEventListener('click', (e) => {
 });
 
 // 6. LocalStorage
+function getFromStorage(key, fallback) {
+  const stored = localStorage.getItem(key);
+  return stored ? JSON.parse(stored) : fallback;
+}
+
+// save Data
+function saveData(key, value) {
+  localStorage.setItem(key, JSON.stringify(value));
+}
+
 // render todos
 function renderTodos(todos) {
   todos.forEach((todo) => {
@@ -168,7 +190,19 @@ function renderTodos(todos) {
     itemContainer.appendChild(item);
   });
 }
-// save Data
-function saveData(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
+
+function renderCategory() {
+  const activeBtn = document.querySelector(
+    `.filter__btn[data-category="${category}"]`
+  );
+  activeBtn.classList.add('btn--selected');
+}
+// updateData
+
+// detect browser theme
+function defaultTheme() {
+  const isDarkMode =
+    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
+
+  return isDarkMode ? 'dark' : 'light';
 }
