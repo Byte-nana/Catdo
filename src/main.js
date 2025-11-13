@@ -1,22 +1,16 @@
 'use strict';
 
-// 1. Add ⭕️
-// 2. check ⭕️
-// 3. delete ⭕️
-// 4. filters ⭕️
-// 5. darkMode ⭕️
-// 6. localStorage
-
 const form = document.querySelector('.footer__form');
 const textInput = document.querySelector('#form__input');
 const itemContainer = document.querySelector('.main__items');
 const filterBtns = document.querySelector('.header__filters');
 const themeBtn = document.querySelector('.header__themeBtn');
+const icon = themeBtn.querySelector('.fa-solid');
 
-// Get items from local storage
+// Get items from local storage(if not initalise data)
 let todos = getFromStorage('todos', []);
 let category = getFromStorage('category', 'all');
-let theme = getFromStorage('theme', defaultTheme());
+let theme = getFromStorage('theme', defaultBrowserTheme());
 
 saveData('todos', todos);
 saveData('category', category);
@@ -26,7 +20,7 @@ renderTodos(todos);
 renderCategory();
 renderTheme();
 
-// 1. Add
+// Add todo items
 form.addEventListener('submit', (e) => {
   e.preventDefault();
 
@@ -37,7 +31,16 @@ form.addEventListener('submit', (e) => {
     textInput.focus();
     return;
   }
+  const newTodo = createTodoData(text);
+  const item = createItem(newTodo);
+  itemContainer.appendChild(item);
 
+  item.scrollIntoView({ behavior: 'smooth' });
+  textInput.value = '';
+  textInput.focus();
+});
+
+function createTodoData(text) {
   const newTodo = {
     id: crypto.randomUUID(),
     text,
@@ -46,12 +49,8 @@ form.addEventListener('submit', (e) => {
   todos.push(newTodo);
   saveData('todos', todos);
 
-  const item = createItem(newTodo);
-  itemContainer.appendChild(item);
-  item.scrollIntoView({ behavior: 'smooth' });
-  textInput.value = '';
-  textInput.focus();
-});
+  return newTodo;
+}
 
 function createItem(todo) {
   const item = document.createElement('li');
@@ -78,62 +77,66 @@ function createItem(todo) {
   return item;
 }
 
-// 2. Check
+// Update checkbox status
 itemContainer.addEventListener('change', (e) => {
   const id = e.target.id;
   if (!id) return;
-  const checkedItem = document.querySelector(`.item__checkbox[id="${id}"]`);
 
+  onCheck(id);
+  filterInstantRender();
+});
+
+function onCheck(id) {
+  const checkedItem = document.querySelector(`.item__checkbox[id="${id}"]`);
   const checkedTodo = todos.find((todo) => todo.id === id);
+
   checkedTodo.status = checkedItem.checked ? 'completed' : 'active';
   saveData('todos', todos);
+}
 
-  // re-render
+function filterInstantRender() {
   const currentFilter = document.querySelector('.filter__btn.btn--selected')
     ?.dataset.category;
   if (currentFilter !== 'all') {
     hideItems(todos);
     showFilterItems(todos.filter((todo) => todo.status === currentFilter));
   }
-});
-
-// 3. delete
+}
+// Delete todo item
 itemContainer.addEventListener('click', (e) => {
   const id = e.target.dataset.id;
   if (!id) return;
 
-  const deleteBtn = e.target.closest('button');
-  if (!deleteBtn) return;
-
-  const deletedItem = document.querySelector(`li[data-id="${id}"]`);
-  deletedItem.remove();
+  onDelete(e.target, id);
 
   todos = todos.filter((todo) => todo.id !== id);
   saveData('todos', todos);
 });
 
-// 4. filters
+function onDelete(target, id) {
+  const deleteBtn = target.closest('button');
+  if (!deleteBtn) return;
+
+  const deletedItem = document.querySelector(`li[data-id="${id}"]`);
+  deletedItem.remove();
+}
+
+// Filter todo items
 filterBtns.addEventListener('click', (e) => {
   const categoryId = e.target.dataset.category;
   if (!categoryId) return;
 
   handleActiveBtn(e.target);
-
-  const filteredTodos =
-    categoryId === 'all'
-      ? todos
-      : todos.filter((todo) => todo.status === categoryId);
-
-  hideItems(todos);
-  showFilterItems(filteredTodos);
+  onFilter(categoryId);
   saveData('category', categoryId);
 });
 
-function showFilterItems(todos) {
-  todos.forEach((todo) => {
-    const visibleItems = document.querySelector(`li[data-id="${todo.id}"]`);
-    visibleItems.style.display = 'flex';
-  });
+function onFilter(filter) {
+  const filteredTodos =
+    filter === 'all' ? todos : todos.filter((todo) => todo.status === filter);
+
+  hideItems(todos);
+  showFilterItems(filteredTodos);
 }
 
 function hideItems(todos) {
@@ -143,39 +146,37 @@ function hideItems(todos) {
   });
 }
 
+function showFilterItems(todos) {
+  todos.forEach((todo) => {
+    const visibleItems = document.querySelector(`li[data-id="${todo.id}"]`);
+    visibleItems.style.display = 'flex';
+  });
+}
+
 function handleActiveBtn(target) {
   const activeBtn = document.querySelector('.btn--selected');
   activeBtn.classList.remove('btn--selected');
   target.classList.add('btn--selected');
 }
 
-// 5. dark mode
+// Dark/light mode toggle
 themeBtn.addEventListener('click', (e) => {
-  const icon = themeBtn.querySelector('.fa-solid');
-  if (icon.matches('.fa-moon')) {
-    icon.classList.remove('fa-moon');
-    icon.classList.add('fa-sun');
-  } else {
-    icon.classList.remove('fa-sun');
-    icon.classList.add('fa-moon');
-  }
+  icon.classList.toggle('fa-moon');
+  icon.classList.toggle('fa-sun');
 
   const isDark = document.documentElement.classList.toggle('dark');
   saveData('theme', isDark ? 'dark' : 'light');
 });
 
-// 6. LocalStorage
 function getFromStorage(key, fallback) {
   const stored = localStorage.getItem(key);
   return stored ? JSON.parse(stored) : fallback;
 }
 
-// save Data
 function saveData(key, value) {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-// render todos
 function renderTodos(todos) {
   todos.forEach((todo) => {
     const item = createItem(todo);
@@ -183,35 +184,25 @@ function renderTodos(todos) {
   });
 }
 
-// render Category
 function renderCategory() {
   const activeBtn = document.querySelector(
     `.filter__btn[data-category="${category}"]`
   );
   activeBtn.classList.add('btn--selected');
 
-  // showing filtered todos
-
-  const filteredTodos =
-    category === 'all'
-      ? todos
-      : todos.filter((todo) => todo.status === category);
-
-  hideItems(todos);
-  showFilterItems(filteredTodos);
+  onFilter(category);
 }
 
-// render Dark mode
 function renderTheme() {
   if (theme === 'dark') {
     document.documentElement.classList.add('dark');
-  } else {
-    return;
+    icon.classList.remove('fa-moon');
+    icon.classList.add('fa-sun');
   }
 }
 
-// detect browser theme
-function defaultTheme() {
+// Detect browser default theme and then set it as inital render for dark/light mode
+function defaultBrowserTheme() {
   const isDarkMode =
     window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)');
 
